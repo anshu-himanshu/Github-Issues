@@ -8,5 +8,5 @@ import retrofit2.http.Query
 interface GithubApi {
 
     @GET("/repos/bumptech/glide/issues")
-    suspend fun getIssues(@Query("state")state:String):Response<Model>
+    suspend fun getIssues(@Query("state")state:String,@Query("page") page:Int):Response<Model>
 }

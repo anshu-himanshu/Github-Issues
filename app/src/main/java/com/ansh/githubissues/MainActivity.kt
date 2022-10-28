@@ -13,12 +13,14 @@ class MainActivity : AppCompatActivity() {
 
         val issuesApi = RetrofitHelper.getInstance().create(GithubApi::class.java)
         GlobalScope.launch {
-            val result = issuesApi.getIssues("closed")
+            val result = issuesApi.getIssues("closed",2)
             if (result!=null){
-                Log.e("ISSUES",result.body().toString())
-                Log.e("ISSUES",result.message() )
-                Log.e("ISSUES",result.errorBody().toString() )
-                Log.e("ISSUES",result.toString())
+
+
+                val issuesList =  result.body()
+                issuesList?.forEach {
+                    Log.e("ISSUES",it.title)
+                }
 
             }
         }
