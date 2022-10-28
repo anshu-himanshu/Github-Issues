@@ -1,3 +1,5 @@
+package com.ansh.githubissues.models
+
 data class Label(
     val color: String,
     val default: Boolean,

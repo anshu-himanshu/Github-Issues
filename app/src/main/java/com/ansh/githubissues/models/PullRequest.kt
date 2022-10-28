@@ -1,3 +1,5 @@
+package com.ansh.githubissues.models
+
 data class PullRequest(
     val diff_url: String,
     val html_url: String,

@@ -1,3 +1,5 @@
+package com.ansh.githubissues.models
+
 data class User(
     val avatar_url: String,
     val events_url: String,

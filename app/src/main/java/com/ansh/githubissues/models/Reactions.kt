@@ -1,3 +1,5 @@
+package com.ansh.githubissues.models
+
 data class Reactions(
     val plusOne: Int,
     val minusOne: Int,

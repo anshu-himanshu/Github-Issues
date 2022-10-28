@@ -1,3 +1,5 @@
+package com.ansh.githubissues.models
+
 data class modelItem(
     val active_lock_reason: Any,
     val assignee: Any,
