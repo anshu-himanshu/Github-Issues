@@ -2,6 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:layout_alignParentTop="true"/>
 
     <RelativeLayout
         android:layout_marginTop="20dp"
@@ -21,6 +26,7 @@
             android:textColor="@color/black"/>
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
             android:id="@+id/llIssueDetails"
             android:layout_below="@id/tvIssueTitle"
@@ -68,6 +74,8 @@
 
 
         </LinearLayout>
+
+
 
 
 

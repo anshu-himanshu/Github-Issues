@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -13,7 +14,10 @@
         android:orientation="vertical">
 
         <SearchView
+            android:iconifiedByDefault="false"
+            android:background="@drawable/search_view_bg"
             android:id="@+id/searchView"
+            android:queryHint="search issues"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <TextView
@@ -25,6 +29,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:id="@+id/rvIssuesList"
         android:layout_marginTop="50dp"
         android:layout_below="@id/topLayout"
