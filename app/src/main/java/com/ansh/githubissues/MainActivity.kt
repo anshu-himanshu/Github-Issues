@@ -92,8 +92,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (filteredList.isEmpty()) {
-            Toast.makeText(this, "No Data", Toast.LENGTH_LONG).show()
+            adapter.setFilteredList(ArrayList())
+            binding.tvRepoName.text = "No Issues found with given input"
         } else {
+            binding.tvRepoName.text = "showing results for Glide closed issues"
 
             adapter.setFilteredList(filteredList)
         }
