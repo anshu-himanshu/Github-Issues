@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">GitHub Issues</string>
+    <string name="search_results_description_text">showing results for Glide\'s closed issues</string>
 </resources>

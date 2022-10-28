@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import com.ansh.githubissues.R
 import com.ansh.githubissues.models.IssuesModel
@@ -47,6 +48,8 @@ class RvIssuesAdapter(val context: Context, var issuesList:ArrayList<IssuesModel
         return ItemViewHolder(view)    }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+
+
         holder.issueTitle.text = issuesList[position].title
         holder.userClosedDate.text ="Closed On: "+ issuesList[position].closedDate
         holder.userCreatedDate.text ="Created On: "+ issuesList[position].createdDate

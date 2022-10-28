@@ -1,13 +1,10 @@
 package com.ansh.githubissues
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ansh.githubissues.adapter.RvIssuesAdapter
-
 import com.ansh.githubissues.databinding.ActivityMainBinding
 import com.ansh.githubissues.models.IssuesModel
 import kotlinx.coroutines.GlobalScope
@@ -33,46 +30,35 @@ class MainActivity : AppCompatActivity() {
 
         //handling SearchView
         searchView.clearFocus()
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                callSearch(query)
                 return true
             }
-
             override fun onQueryTextChange(newText: String): Boolean {
                 filterList(newText)
                 return true
             }
-
-            fun callSearch(query: String?) {
-                //Do searching
-            }
         })
 
 
+        //fetching data from Api
         val issuesApi = RetrofitHelper.getInstance().create(GithubApi::class.java)
         GlobalScope.launch {
             val result = issuesApi.getIssues("closed", 2)
-
             if (result != null) {
 
                 val issuesList = result.body()
                 issuesList?.forEach {
-                    val item = IssuesModel(
-                        it.title,
-                        it.created_at,
-                        it.closed_at,
-                        it.user.login,
-                        it.user.avatar_url
+                    list.add(
+                        IssuesModel(
+                            it.title,
+                            it.created_at,
+                            it.closed_at,
+                            it.user.login,
+                            it.user.avatar_url
+                        )
                     )
-                    Log.e(
-                        "ISSUES",
-                        it.title + " " + it.user.avatar_url + " " + it.user.login + " " + it.closed_at + " " + it.created_at + " "
-                    )
-                    list.add(item)
                 }
-
             }
         }.invokeOnCompletion {
             runOnUiThread {
@@ -82,21 +68,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterList(newText: String) {
+    private fun filterList(filteredText:String) {
         val filteredList = ArrayList<IssuesModel>()
-
-        for (item: IssuesModel in list) {
-            if (item.title.toLowerCase().contains((newText.toLowerCase()))) {
+        // filtering based on search input
+        for (item:IssuesModel in list) {
+            if (item.title.lowercase().contains((filteredText.lowercase()))) {
                 filteredList.add(item)
             }
         }
 
         if (filteredList.isEmpty()) {
+            //sending empty list
             adapter.setFilteredList(ArrayList())
             binding.tvRepoName.text = "No Issues found with given input"
         } else {
-            binding.tvRepoName.text = "showing results for Glide closed issues"
-
+            //sending filtered list
+            binding.tvRepoName.text = getString(R.string.search_results_description_text)
             adapter.setFilteredList(filteredList)
         }
 
@@ -105,8 +92,18 @@ class MainActivity : AppCompatActivity() {
     private fun setUpRecyclerView() {
 
         adapter = RvIssuesAdapter(this, list)
-
         recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+        })
 
     }
 }
