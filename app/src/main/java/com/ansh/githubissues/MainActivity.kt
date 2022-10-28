@@ -16,6 +16,10 @@ class MainActivity : AppCompatActivity() {
             val result = issuesApi.getIssues("closed")
             if (result!=null){
                 Log.e("ISSUES",result.body().toString())
+                Log.e("ISSUES",result.message() )
+                Log.e("ISSUES",result.errorBody().toString() )
+                Log.e("ISSUES",result.toString())
+
             }
         }
     }
