@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ansh.githubissues.adapter.RvIssuesAdapter
 import com.ansh.githubissues.databinding.ActivityMainBinding
 import com.ansh.githubissues.models.IssuesModel
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         //initialing Views
         searchView = binding.searchView
         recyclerView = binding.rvIssuesList
+        adapter = RvIssuesAdapter(this, list)
 
 
         //handling SearchView
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 filterList(newText)
                 return true
@@ -43,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         //fetching data from Api
         val issuesApi = RetrofitHelper.getInstance().create(GithubApi::class.java)
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val result = issuesApi.getIssues("closed", 2)
             if (result != null) {
 
@@ -68,10 +71,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterList(filteredText:String) {
+    private fun filterList(filteredText: String) {
         val filteredList = ArrayList<IssuesModel>()
         // filtering based on search input
-        for (item:IssuesModel in list) {
+        for (item: IssuesModel in list) {
             if (item.title.lowercase().contains((filteredText.lowercase()))) {
                 filteredList.add(item)
             }
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         adapter = RvIssuesAdapter(this, list)
         recyclerView.adapter = adapter
 
-        recyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
             }
