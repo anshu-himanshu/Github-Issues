@@ -2,6 +2,8 @@ package com.ansh.githubissues
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -111,6 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadNextPage(nextPage: Int) {
+        binding.progressBar.visibility = VISIBLE
         val nextList = ArrayList<IssuesModel>()
         CoroutineScope(Dispatchers.Main).launch {
             val result = issuesApi.getIssues("closed", nextPage)
@@ -130,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             }
         }.invokeOnCompletion {
             adapter.updateList(nextList)
+            binding.progressBar.visibility = GONE
         }
     }
-
 }
