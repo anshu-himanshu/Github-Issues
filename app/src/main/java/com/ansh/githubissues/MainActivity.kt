@@ -1,8 +1,8 @@
 package com.ansh.githubissues
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ansh.githubissues.adapter.RvIssuesAdapter
@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private val list = ArrayList<IssuesModel>()
     private lateinit var adapter: RvIssuesAdapter
+    private var currentPage = 1
+    private lateinit var issuesApi: GithubApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,9 @@ class MainActivity : AppCompatActivity() {
 
 
         //fetching data from Api
-        val issuesApi = RetrofitHelper.getInstance().create(GithubApi::class.java)
+        issuesApi = RetrofitHelper.getInstance().create(GithubApi::class.java)
         CoroutineScope(Dispatchers.Main).launch {
-            val result = issuesApi.getIssues("closed", 2)
+            val result = issuesApi.getIssues("closed", 1)
             if (result != null) {
                 val issuesList = result.body()
                 issuesList?.forEach {
@@ -64,9 +66,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }.invokeOnCompletion {
-                setUpRecyclerView()
+            setUpRecyclerView()
         }
     }
+
 
     private fun filterList(filteredText: String) {
         val filteredList = ArrayList<IssuesModel>()
@@ -96,14 +99,44 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    loadNextPage(++currentPage)
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
+                }
+                super.onScrollStateChanged(recyclerView, newState)
             }
 
         })
 
     }
+
+    private fun loadNextPage(currentPage: Int) {
+        val nextPage = ArrayList<IssuesModel>()
+        Log.e("",currentPage.toString()+nextPage.size)
+
+
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val result = issuesApi.getIssues("closed", currentPage)
+            if (result != null) {
+                val issuesList = result.body()
+                issuesList?.forEach {
+                    nextPage.add(
+                        IssuesModel(
+                            it.title,
+                            it.created_at,
+                            it.closed_at,
+                            it.user.login,
+                            it.user.avatar_url
+                        )
+                    )
+                }
+            }
+        }.invokeOnCompletion {
+            Log.e("",currentPage.toString()+nextPage.size)
+            adapter.updateList(nextPage)
+
+        }
+    }
+
 }

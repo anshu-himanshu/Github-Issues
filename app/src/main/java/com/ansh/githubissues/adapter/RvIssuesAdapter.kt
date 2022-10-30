@@ -40,6 +40,10 @@ class RvIssuesAdapter(val context: Context, var issuesList:ArrayList<IssuesModel
         anim.duration = 600
         view.startAnimation(anim)
     }
+    fun updateList(list: ArrayList<IssuesModel>){
+        this.issuesList.addAll(list)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context)
