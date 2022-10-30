@@ -2,6 +2,7 @@ package com.ansh.githubissues
 
 import android.os.Bundle
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ansh.githubissues.adapter.RvIssuesAdapter
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             val result = issuesApi.getIssues("closed", 2)
             if (result != null) {
-
                 val issuesList = result.body()
                 issuesList?.forEach {
                     list.add(
@@ -64,10 +64,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }.invokeOnCompletion {
-            runOnUiThread {
                 setUpRecyclerView()
-            }
-
         }
     }
 
