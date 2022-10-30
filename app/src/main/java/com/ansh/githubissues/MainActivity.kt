@@ -110,18 +110,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadNextPage(currentPage: Int) {
-        val nextPage = ArrayList<IssuesModel>()
-        Log.e("",currentPage.toString()+nextPage.size)
-
-
-
+    private fun loadNextPage(nextPage: Int) {
+        val nextList = ArrayList<IssuesModel>()
         CoroutineScope(Dispatchers.Main).launch {
-            val result = issuesApi.getIssues("closed", currentPage)
+            val result = issuesApi.getIssues("closed", nextPage)
             if (result != null) {
                 val issuesList = result.body()
                 issuesList?.forEach {
-                    nextPage.add(
+                    nextList.add(
                         IssuesModel(
                             it.title,
                             it.created_at,
@@ -133,9 +129,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }.invokeOnCompletion {
-            Log.e("",currentPage.toString()+nextPage.size)
-            adapter.updateList(nextPage)
-
+            adapter.updateList(nextList)
         }
     }
 
